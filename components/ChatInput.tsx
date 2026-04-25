@@ -95,6 +95,12 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
           <Send className="w-5 h-5" />
         </button>
       </form>
+      {image && (
+        <p className="text-[10px] text-slate-400 ml-4 flex items-center">
+          <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse" />
+          Images are processed securely by Google Gemini and are never stored on our servers.
+        </p>
+      )}
     </div>
   );
 }

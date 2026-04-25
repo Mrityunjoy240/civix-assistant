@@ -21,7 +21,7 @@ export async function chatAction(
 
     // Vision-specific instruction if an image is present
     if (messages[messages.length - 1].image) {
-      systemMessage += "\n\nVISION TASK: The user has uploaded an image (Voter ID, document, or notice). Analyze it carefully. Extract relevant numbers (like EPIC), addresses, or names. Match them to the user's jurisdiction and provide specific next steps based on what you see.";
+      systemMessage += "\n\nVISION TASK: The user has uploaded an image. IMPORTANT: For privacy and security, focus ONLY on civic-relevant data like State, County, or EPIC number. DO NOT repeat or echo sensitive PII like date of birth, father's name, or full signatures in your text response. Extract the jurisdiction and help the user find their polling station or registration status based on what you see.";
     }
 
     if (location?.state) {
