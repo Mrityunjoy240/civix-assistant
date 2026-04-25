@@ -84,24 +84,16 @@ export default function MessageList({ messages, loading }: MessageListProps) {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="mr-auto bg-white border border-slate-100 rounded-2xl rounded-tl-none p-4 shadow-sm flex items-center space-x-2"
+          className="mr-auto w-full max-w-[85%] space-y-3"
         >
-          <div className="flex space-x-1">
-            <motion.div
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ repeat: Infinity, duration: 1 }}
-              className="w-2 h-2 bg-slate-300 rounded-full"
-            />
-            <motion.div
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ repeat: Infinity, duration: 1, delay: 0.2 }}
-              className="w-2 h-2 bg-slate-300 rounded-full"
-            />
-            <motion.div
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ repeat: Infinity, duration: 1, delay: 0.4 }}
-              className="w-2 h-2 bg-slate-300 rounded-full"
-            />
+          <div className="flex items-start space-x-2">
+            <div className="bg-white border border-slate-100 rounded-2xl rounded-tl-none p-5 shadow-sm w-full">
+              <div className="space-y-3">
+                <div className="h-2 bg-slate-100 rounded-full w-3/4 animate-pulse" />
+                <div className="h-2 bg-slate-100 rounded-full animate-pulse" />
+                <div className="h-2 bg-slate-100 rounded-full w-5/6 animate-pulse" />
+              </div>
+            </div>
           </div>
         </motion.div>
       )}

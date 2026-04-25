@@ -9,7 +9,12 @@ export async function getGeminiResponse(
   try {
     const model = genAI.getGenerativeModel({ 
       model: 'gemini-2.5-flash',
-      systemInstruction: systemPrompt
+      systemInstruction: systemPrompt,
+      tools: [
+        {
+          googleSearch: {},
+        },
+      ],
     });
 
     const chat = model.startChat({
