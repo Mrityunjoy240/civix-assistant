@@ -50,13 +50,26 @@ export default function DeadlineWidget({ locationName, deadlines, nextDeadline }
           <Calendar className="w-5 h-5 text-primary-600" />
           <h3 className="font-bold text-slate-800 text-sm">Deadlines</h3>
         </div>
-        <button 
-          onClick={handleWhatsAppShare}
-          className="p-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-colors"
-          title="Share to WhatsApp"
-        >
-          <Share2 className="w-4 h-4" />
-        </button>
+        <div className="flex space-x-1">
+          {locationName?.toLowerCase().includes('india') || true && (
+            <a 
+              href="https://voters.eci.gov.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 bg-primary-50 text-primary-600 rounded-lg hover:bg-primary-100 transition-colors"
+              title="Official ECI Portal"
+            >
+              <Info className="w-4 h-4" />
+            </a>
+          )}
+          <button 
+            onClick={handleWhatsAppShare}
+            className="p-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-colors"
+            title="Share to WhatsApp"
+          >
+            <Share2 className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       <div className="space-y-3 mb-6">

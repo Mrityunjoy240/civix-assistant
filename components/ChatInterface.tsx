@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { Download, LayoutDashboard, MessageSquare, Settings, Menu, X } from 'lucide-react';
 import VoterToolkit from './VoterToolkit';
 import confetti from 'canvas-confetti';
+import CivicQuiz from './CivicQuiz';
 
 interface Message {
   id: string;
@@ -225,6 +226,9 @@ export default function ChatInterface() {
         )}
         
         <VoterToolkit />
+        <div className="mt-8">
+          <CivicQuiz />
+        </div>
       </aside>
 
       {/* MOBILE FAB & DRAWER */}
