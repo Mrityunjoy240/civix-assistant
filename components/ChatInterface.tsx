@@ -147,18 +147,18 @@ export default function ChatInterface() {
       </aside>
 
       {/* 2. MAIN CENTER (Chat Engine) */}
-      <main className="flex-1 flex flex-col min-w-0 bg-white lg:m-4 lg:rounded-[2.5rem] lg:border border-slate-200/60 lg:shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)] overflow-hidden relative">
+      <main className="flex-1 flex flex-col min-w-0 bg-white lg:m-4 lg:rounded-[3rem] lg:border border-slate-200/50 lg:shadow-[0_40px_100px_-30px_rgba(0,0,0,0.08)] overflow-hidden relative">
         
         {/* Dynamic Chat Canvas */}
         <JourneyNavigator steps={steps} />
-        <div className="flex-1 overflow-y-auto px-4 md:px-10 scroll-smooth custom-scrollbar" ref={scrollRef}>
-          <div className="max-w-4xl mx-auto py-10">
+        <div className="flex-1 overflow-y-auto px-4 md:px-10 scroll-smooth custom-scrollbar bg-white/50" ref={scrollRef}>
+          <div className="max-w-3xl mx-auto py-12">
             {completedSteps.size === 3 && (
-              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="mb-10 p-8 bg-gradient-to-br from-primary-600 to-primary-900 rounded-[2rem] text-white shadow-2xl relative overflow-hidden">
-                <div className="relative z-10">
-                  <h3 className="text-2xl font-black mb-2 tracking-tight">Passport Ready! 🗳️</h3>
-                  <p className="text-primary-100 text-xs font-medium mb-6 max-w-sm">We've gathered all your registration, deadline, and polling booth details. You are fully prepared to participate.</p>
-                  <button onClick={handleExport} className="bg-white text-primary-700 text-xs font-black px-6 py-3 rounded-xl shadow-lg hover:scale-105 transition-all">
+              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="mb-12 p-8 bg-gradient-to-br from-primary-600 to-primary-900 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden">
+                <div className="relative z-10 text-center">
+                  <h3 className="text-3xl font-black mb-2 tracking-tight">Passport Ready! 🗳️</h3>
+                  <p className="text-primary-100 text-sm font-medium mb-8 max-w-sm mx-auto">We've gathered all your registration, deadline, and polling booth details. You are fully prepared to participate.</p>
+                  <button onClick={handleExport} className="bg-white text-primary-700 text-[11px] font-black px-8 py-4 rounded-2xl shadow-lg hover:scale-105 active:scale-95 transition-all uppercase tracking-widest">
                     DOWNLOAD SUMMARY CARD
                   </button>
                 </div>
@@ -169,10 +169,10 @@ export default function ChatInterface() {
         </div>
 
         {/* Professional Input Dock */}
-        <div className="px-4 md:px-10 pb-6 pt-2 bg-white">
-          <div className="max-w-4xl mx-auto">
+        <div className="px-4 md:px-12 pb-8 pt-4 bg-white border-t border-slate-50">
+          <div className="max-w-3xl mx-auto">
             <ChatInput onSend={handleSend} disabled={isPending} />
-            <p className="text-[9px] text-center text-slate-300 mt-4 font-medium tracking-tight uppercase">
+            <p className="text-[9px] text-center text-slate-400 mt-5 font-bold tracking-[0.1em] uppercase opacity-50">
               Civix Non-Partisan Protocol • Verified Educational Data
             </p>
           </div>
@@ -180,22 +180,22 @@ export default function ChatInterface() {
       </main>
 
       {/* 3. COMMAND CENTER (Right Rail) */}
-      <aside className="hidden xl:flex w-[22rem] flex-col bg-[#F8FAFC] p-8 overflow-y-auto gap-8 border-l border-slate-100">
-        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Command Center</h4>
+      <aside className="hidden xl:flex w-[24rem] flex-col bg-[#F8FAFC] p-10 overflow-y-auto gap-8 border-l border-slate-100">
+        <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-1 mb-2">Command Center</h4>
         
         {deadlines.length > 0 ? (
           <DeadlineWidget locationName={location?.state} deadlines={deadlines} nextDeadline={nextDeadline} />
         ) : (
-          <div className="p-8 bg-white rounded-[2rem] border border-slate-100 text-center shadow-sm">
-            <LayoutDashboard className="w-8 h-8 text-slate-200 mx-auto mb-4" />
-            <p className="text-[11px] text-slate-400 font-bold leading-relaxed px-4">
+          <div className="p-10 bg-white rounded-[2.5rem] border border-slate-100 text-center shadow-sm">
+            <LayoutDashboard className="w-10 h-10 text-slate-100 mx-auto mb-5" />
+            <p className="text-[12px] text-slate-400 font-bold leading-relaxed px-2">
               Enter your location to activate real-time tracking.
             </p>
           </div>
         )}
         
         <VoterToolkit />
-        <div className="mt-8">
+        <div className="mt-4">
           <CivicQuiz />
         </div>
       </aside>
@@ -203,9 +203,9 @@ export default function ChatInterface() {
       {/* MOBILE FAB & DRAWER */}
       <button 
         onClick={() => setShowToolkit(true)}
-        className="lg:hidden fixed bottom-28 right-6 w-14 h-14 bg-slate-900 text-white rounded-[1.25rem] shadow-2xl flex items-center justify-center z-40 hover:scale-110 active:scale-95 transition-all"
+        className="lg:hidden fixed bottom-32 right-6 w-12 h-12 bg-slate-900 text-white rounded-2xl shadow-2xl flex items-center justify-center z-40 hover:scale-110 active:scale-95 transition-all"
       >
-        <LayoutDashboard className="w-6 h-6" />
+        <LayoutDashboard className="w-5 h-5" />
       </button>
 
       <AnimatePresence>
