@@ -13,7 +13,7 @@ export async function getGeminiResponse(
       tools: [
         {
           googleSearch: {},
-        },
+        } as any,
       ],
     });
 

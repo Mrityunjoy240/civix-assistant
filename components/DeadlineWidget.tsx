@@ -1,7 +1,8 @@
 'use client';
 
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, Clock, AlertCircle, Share2 } from 'lucide-react';
+import { Calendar, Clock, AlertCircle, Share2, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Deadline {
