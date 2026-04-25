@@ -6,7 +6,8 @@ import { findStateData, getNextDeadline, formatDateShort, getDeadlinesForState }
 
 export async function chatAction(
   messages: { role: 'user' | 'assistant'; content: string; image?: string; imageType?: string }[],
-  location: { country: string; state?: string; county?: string } | null
+  location: { country: string; state?: string; county?: string } | null,
+  language: string = 'English'
 ) {
   try {
     // Basic validation
@@ -18,6 +19,7 @@ export async function chatAction(
     const limitedMessages = messages.slice(-10);
 
     let systemMessage = SYSTEM_PROMPT;
+    systemMessage += `\n\nLANGUAGE: You MUST respond in ${language}. If the user provides an image or text in another language, translate your analysis into ${language}.`;
 
     // Vision-specific instruction if an image is present
     if (messages[messages.length - 1].image) {

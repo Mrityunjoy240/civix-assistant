@@ -30,6 +30,7 @@ interface Location {
 export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [location, setLocation] = useState<Location | null>(null);
+  const [language, setLanguage] = useState<'English' | 'Hindi' | 'Bengali'>('English');
   const [isPending, startTransition] = useTransition();
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -78,7 +79,8 @@ export default function ChatInterface() {
           image: m.image,
           imageType: m.imageType 
         })),
-        updatedLocation
+        updatedLocation,
+        language
       );
 
       if (result.response) {
@@ -115,6 +117,24 @@ export default function ChatInterface() {
       <div className="flex-1 overflow-y-auto px-4 md:px-8 scroll-smooth" ref={scrollRef}>
         <div className="py-8">
           <header className="mb-10 text-center relative">
+            <div className="absolute top-0 left-0">
+              <div className="flex bg-slate-100/80 p-1 rounded-xl border border-slate-200">
+                {(['English', 'Hindi', 'Bengali'] as const).map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => setLanguage(lang)}
+                    className={cn(
+                      "px-3 py-1.5 text-[10px] font-bold rounded-lg transition-all",
+                      language === lang 
+                        ? "bg-white text-primary-600 shadow-sm" 
+                        : "text-slate-400 hover:text-slate-600"
+                    )}
+                  >
+                    {lang === 'Hindi' ? 'हिन्दी' : lang === 'Bengali' ? 'বাংলা' : 'EN'}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className="absolute top-0 right-0">
               <AnimatePresence>
                 {messages.length > 0 && (

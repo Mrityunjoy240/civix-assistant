@@ -17,6 +17,8 @@ interface DeadlineWidgetProps {
 }
 
 export default function DeadlineWidget({ locationName, deadlines, nextDeadline }: DeadlineWidgetProps) {
+  const [queueStatus, setQueueStatus] = useState<'low' | 'medium' | 'high' | null>(null);
+  
   if (deadlines.length === 0) return null;
 
   const handleWhatsAppShare = () => {
@@ -46,7 +48,7 @@ export default function DeadlineWidget({ locationName, deadlines, nextDeadline }
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
           <Calendar className="w-5 h-5 text-primary-600" />
-          <h3 className="font-bold text-slate-800">Deadlines</h3>
+          <h3 className="font-bold text-slate-800 text-sm">Deadlines</h3>
         </div>
         <button 
           onClick={handleWhatsAppShare}
@@ -57,7 +59,7 @@ export default function DeadlineWidget({ locationName, deadlines, nextDeadline }
         </button>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-3 mb-6">
         {deadlines.map((deadline, index) => (
           <div key={index} className="flex items-center justify-between text-sm">
             <span className="text-slate-600 flex items-center">
@@ -75,6 +77,41 @@ export default function DeadlineWidget({ locationName, deadlines, nextDeadline }
             </span>
           </div>
         ))}
+      </div>
+
+      <div className="pt-4 border-t border-slate-100">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Live Booth Status</span>
+          {queueStatus && (
+            <span className={cn(
+              "text-[9px] font-bold px-2 py-0.5 rounded-full uppercase",
+              queueStatus === 'low' && "bg-green-100 text-green-600",
+              queueStatus === 'medium' && "bg-orange-100 text-orange-600",
+              queueStatus === 'high' && "bg-red-100 text-red-600"
+            )}>
+              {queueStatus} Queue
+            </span>
+          )}
+        </div>
+        <div className="flex gap-2">
+          {(['low', 'medium', 'high'] as const).map((status) => (
+            <button
+              key={status}
+              onClick={() => setQueueStatus(status)}
+              className={cn(
+                "flex-1 py-2 rounded-xl text-[10px] font-bold transition-all border",
+                queueStatus === status 
+                  ? "bg-slate-900 border-slate-900 text-white shadow-md" 
+                  : "bg-white border-slate-200 text-slate-400 hover:border-primary-200"
+              )}
+            >
+              {status === 'low' ? '😊 Clear' : status === 'medium' ? '😐 Busy' : '😫 Crowded'}
+            </button>
+          ))}
+        </div>
+        <p className="text-[9px] text-slate-400 mt-3 text-center italic">
+          Real-time updates from voters at your booth.
+        </p>
       </div>
     </motion.div>
   );
