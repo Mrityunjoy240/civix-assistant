@@ -69,6 +69,27 @@ export const US_STATES_ELECTION_DATA: StateElectionData[] = [
     earlyVotingEnd: '2026-10-31',
     registrationUrl: 'https://www.mvp.sos.ga.gov',
     pollingPlaceUrl: 'https://www.mvp.sos.ga.gov'
+  },
+  // India Regions
+  {
+    state: 'West Bengal',
+    electionDate: '2026-05-10',
+    registrationDeadline: '2026-04-15',
+    mailBallotRequestDeadline: '2026-05-01',
+    earlyVotingStart: '2026-05-05',
+    earlyVotingEnd: '2026-05-08',
+    registrationUrl: 'https://voters.eci.gov.in/',
+    pollingPlaceUrl: 'https://ceowestbengal.nic.in/'
+  },
+  {
+    state: 'Maharashtra',
+    electionDate: '2026-05-15',
+    registrationDeadline: '2026-04-20',
+    mailBallotRequestDeadline: '2026-05-05',
+    earlyVotingStart: '2026-05-10',
+    earlyVotingEnd: '2026-05-13',
+    registrationUrl: 'https://voters.eci.gov.in/',
+    pollingPlaceUrl: 'https://ceo.maharashtra.gov.in/'
   }
 ];
 
