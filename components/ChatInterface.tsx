@@ -15,6 +15,7 @@ import VoterToolkit from './VoterToolkit';
 import confetti from 'canvas-confetti';
 import CivicQuiz from './CivicQuiz';
 import JourneyNavigator from './JourneyNavigator';
+import VoterCardGuide from './VoterCardGuide';
 
 interface Message {
   id: string;
@@ -195,6 +196,9 @@ export default function ChatInterface() {
         )}
         
         <VoterToolkit />
+        <div className="mt-4">
+          <VoterCardGuide />
+        </div>
         <div className="mt-4">
           <CivicQuiz />
         </div>
