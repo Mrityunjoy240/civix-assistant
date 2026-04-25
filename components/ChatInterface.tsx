@@ -8,11 +8,11 @@ import { parseLocation } from '@/lib/location-parser';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
 import DeadlineWidget from './DeadlineWidget';
-import SuggestionChips from './SuggestionChips';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Download } from 'lucide-react';
 import VoterToolkit from './VoterToolkit';
+import confetti from 'canvas-confetti';
 
 interface Message {
   id: string;
@@ -33,6 +33,7 @@ export default function ChatInterface() {
   const [location, setLocation] = useState<Location | null>(null);
   const [language, setLanguage] = useState<'English' | 'Hindi' | 'Bengali'>('English');
   const [isPending, startTransition] = useTransition();
+  const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,6 +41,41 @@ export default function ChatInterface() {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, isPending]);
+
+  const checkProgress = () => {
+    const steps = [
+      { id: 'register', isCompleted: location !== null },
+      { id: 'prepare', isCompleted: location !== null && messages.some(m => 
+          m.role === 'user' && (m.content.toLowerCase().includes('deadline') || m.content.toLowerCase().includes('ballot'))
+        ) 
+      },
+      { id: 'vote', isCompleted: location !== null && messages.some(m => 
+          m.role === 'user' && (m.content.toLowerCase().includes('vote') || m.content.toLowerCase().includes('polling'))
+        ) 
+      }
+    ];
+
+    const newlyCompleted = steps.filter(s => s.isCompleted && !completedSteps.has(s.id));
+    if (newlyCompleted.length > 0) {
+      const nextSet = new Set(completedSteps);
+      newlyCompleted.forEach(s => nextSet.add(s.id));
+      setCompletedSteps(nextSet);
+
+      if (nextSet.size === 3) {
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#3b82f6', '#10b981', '#ef4444']
+        });
+      }
+    }
+    return steps;
+  };
+
+  useEffect(() => {
+    checkProgress();
+  }, [messages, location]);
 
   const handleExport = () => {
     if (messages.length === 0) return;
@@ -136,20 +172,21 @@ export default function ChatInterface() {
                 ))}
               </div>
             </div>
-            <div className="absolute top-0 right-0">
+            <div className="absolute top-0 right-0 flex space-x-2">
               <AnimatePresence>
                 {messages.length > 0 && (
-                  <motion.button
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    onClick={handleExport}
-                    className="flex items-center space-x-2 text-xs font-bold text-slate-400 hover:text-primary-600 transition-colors p-2"
-                    title="Export conversation"
-                  >
-                    <Download className="w-4 h-4" />
-                    <span>EXPORT</span>
-                  </motion.button>
+                  <>
+                    <motion.button
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      onClick={handleExport}
+                      className="flex items-center space-x-2 text-xs font-bold text-slate-400 hover:text-primary-600 transition-colors p-2"
+                      title="Export conversation"
+                    >
+                      <Download className="w-4 h-4" />
+                      <span className="hidden sm:inline">EXPORT</span>
+                    </motion.button>
+                  </>
                 )}
               </AnimatePresence>
             </div>
@@ -179,11 +216,43 @@ export default function ChatInterface() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-8">
-              <SuggestionChips 
-                flows={SUGGESTED_ENTRY_FLOWS} 
-                onSelect={handleSend}
-                disabled={isPending}
-              />
+              {completedSteps.size === 3 && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="mb-8 p-6 bg-gradient-to-br from-primary-600 to-primary-800 rounded-3xl text-white shadow-xl relative overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 p-8 opacity-10">
+                    <motion.div 
+                      animate={{ rotate: 360 }}
+                      transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+                    >
+                      <Download className="w-32 h-32" />
+                    </motion.div>
+                  </div>
+                  <div className="relative z-10">
+                    <h3 className="text-2xl font-black mb-2">You're Ready to Vote! 🗳️</h3>
+                    <p className="text-primary-100 text-sm mb-6">Your personalized voting passport is ready based on our session.</p>
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                      <div className="bg-white/10 rounded-xl p-3 border border-white/10">
+                        <p className="text-[10px] uppercase font-bold text-primary-200 mb-1">Jurisdiction</p>
+                        <p className="text-sm font-bold truncate">{location?.state || 'Verified'}</p>
+                      </div>
+                      <div className="bg-white/10 rounded-xl p-3 border border-white/10">
+                        <p className="text-[10px] uppercase font-bold text-primary-200 mb-1">Language</p>
+                        <p className="text-sm font-bold">{language}</p>
+                      </div>
+                    </div>
+                    <button 
+                      onClick={handleExport}
+                      className="w-full bg-white text-primary-700 font-bold py-3 rounded-xl hover:bg-primary-50 transition-colors shadow-lg shadow-black/20"
+                    >
+                      Download My Voting Plan
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+              
               <div className="bg-slate-50/50 rounded-3xl border border-slate-100 overflow-hidden">
                 <MessageList messages={messages} loading={isPending} />
               </div>

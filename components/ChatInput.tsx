@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { Send, ImagePlus, X } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Send, ImagePlus, X, Mic, MicOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ChatInputProps {
@@ -12,7 +12,41 @@ interface ChatInputProps {
 export default function ChatInput({ onSend, disabled }: ChatInputProps) {
   const [input, setInput] = useState('');
   const [image, setImage] = useState<{ data: string; type: string } | null>(null);
+  const [isListening, setIsListening] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+
+      recognitionRef.current.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setInput((prev) => (prev ? `${prev} ${transcript}` : transcript));
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onerror = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+  }, []);
+
+  const toggleVoice = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+    } else {
+      setIsListening(true);
+      recognitionRef.current?.start();
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,6 +99,18 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
           title="Upload Voter ID or document"
         >
           <ImagePlus className="w-5 h-5" />
+        </button>
+        <button
+          type="button"
+          onClick={toggleVoice}
+          disabled={disabled}
+          className={cn(
+            "p-4 rounded-2xl border border-slate-200 bg-white transition-all shadow-sm",
+            isListening ? "text-red-500 border-red-200 bg-red-50 animate-pulse" : "text-slate-400 hover:text-primary-600 hover:border-primary-200"
+          )}
+          title="Speak to Civix"
+        >
+          {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
         </button>
         <input 
           type="file" 
