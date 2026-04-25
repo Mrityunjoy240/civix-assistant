@@ -12,6 +12,7 @@ import SuggestionChips from './SuggestionChips';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Download } from 'lucide-react';
+import VoterToolkit from './VoterToolkit';
 
 interface Message {
   id: string;
@@ -259,6 +260,10 @@ export default function ChatInterface() {
                       </div>
                     ))}
                   </div>
+                </div>
+
+                <div className="mt-6">
+                  <VoterToolkit />
                 </div>
               </div>
             </div>
