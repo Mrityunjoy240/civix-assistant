@@ -99,26 +99,26 @@ export default function ChatInterface() {
     <div className="flex h-screen bg-[#F8FAFC] overflow-hidden font-sans selection:bg-primary-100">
       
       {/* 1. LEFT RAIL (Desktop Nav) */}
-      <aside className="hidden lg:flex w-72 flex-col bg-white border-r border-slate-200">
-        <div className="p-8">
-          <div className="flex items-center space-x-3 mb-12">
-            <div className="w-10 h-10 bg-primary-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-primary-100 ring-4 ring-primary-50">
-              <span className="text-xl font-black italic">C</span>
+      <aside className="hidden lg:flex w-64 flex-col bg-white border-r border-slate-200">
+        <div className="p-6">
+          <div className="flex items-center space-x-3 mb-10">
+            <div className="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center text-white shadow-xl shadow-primary-100 ring-4 ring-primary-50">
+              <span className="text-lg font-black italic">C</span>
             </div>
             <div>
-              <h1 className="text-xl font-black tracking-tight text-slate-800 leading-none">Civix</h1>
-              <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-widest">Global Election Guide</p>
+              <h1 className="text-lg font-black tracking-tight text-slate-800 leading-none">Civix</h1>
+              <p className="text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-widest">Global Election Guide</p>
             </div>
           </div>
 
-          <div className="space-y-10">
+          <div className="space-y-8">
             <div>
-              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6">User Journey</h4>
-              <div className="space-y-5">
+              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-5">User Journey</h4>
+              <div className="space-y-4">
                 {steps.map((step) => (
                   <div key={step.id} className="flex items-center group cursor-default">
                     <div className={cn(
-                      "w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold transition-all duration-500",
+                      "w-7 h-7 rounded-xl flex items-center justify-center text-[10px] font-bold transition-all duration-500",
                       step.isCompleted 
                         ? "bg-green-500 text-white shadow-lg shadow-green-100 scale-110" 
                         : "bg-slate-50 text-slate-400 border border-slate-100 group-hover:border-primary-200"
@@ -126,7 +126,7 @@ export default function ChatInterface() {
                       {step.isCompleted ? '✓' : step.label.charAt(0)}
                     </div>
                     <span className={cn(
-                      "ml-3 text-sm font-bold transition-colors duration-500",
+                      "ml-3 text-xs font-bold transition-colors duration-500",
                       step.isCompleted ? "text-slate-900" : "text-slate-400"
                     )}>
                       {step.label}
@@ -138,28 +138,29 @@ export default function ChatInterface() {
           </div>
         </div>
 
-        <div className="mt-auto p-8 border-t border-slate-50">
-          <div className="bg-slate-900 rounded-[1.5rem] p-5 text-white shadow-2xl relative overflow-hidden group">
+        <div className="mt-auto p-6 border-t border-slate-50">
+          <div className="bg-slate-900 rounded-[1.25rem] p-4 text-white shadow-2xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-24 h-24 bg-primary-500/20 rounded-full -mr-10 -mt-10 blur-2xl group-hover:scale-150 transition-transform duration-700" />
             <p className="text-[10px] font-bold text-primary-300 uppercase tracking-widest mb-1">PROMPTWARS 2026</p>
-            <p className="text-xs font-medium leading-relaxed opacity-80">Building the future of civic engagement with Gemini.</p>
+            <p className="text-[11px] font-medium leading-relaxed opacity-80 line-clamp-2">Reimagining civic engagement with Gemini.</p>
           </div>
         </div>
       </aside>
 
       {/* 2. MAIN CENTER (Chat Engine) */}
-      <main className="flex-1 flex flex-col min-w-0 bg-white lg:m-4 lg:rounded-[3rem] lg:border border-slate-200/50 lg:shadow-[0_40px_100px_-30px_rgba(0,0,0,0.08)] overflow-hidden relative">
+      <main className="flex-1 flex flex-col min-w-0 bg-white lg:m-2 lg:rounded-[2.5rem] lg:border border-slate-200/50 lg:shadow-[0_40px_100px_-30px_rgba(0,0,0,0.08)] overflow-hidden relative">
         
         {/* Dynamic Chat Canvas */}
         <JourneyNavigator steps={steps} />
-        <div className="flex-1 overflow-y-auto px-4 md:px-10 scroll-smooth custom-scrollbar bg-white/50" ref={scrollRef}>
-          <div className="max-w-3xl mx-auto py-12">
+        
+        <div className="flex-1 overflow-y-auto px-4 md:px-8 scroll-smooth custom-scrollbar bg-white/50" ref={scrollRef}>
+          <div className="max-w-3xl mx-auto py-8">
             {completedSteps.size === 3 && (
-              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="mb-12 p-8 bg-gradient-to-br from-primary-600 to-primary-900 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden">
+              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="mb-10 p-6 bg-gradient-to-br from-primary-600 to-primary-900 rounded-[2rem] text-white shadow-2xl relative overflow-hidden">
                 <div className="relative z-10 text-center">
-                  <h3 className="text-3xl font-black mb-2 tracking-tight">Passport Ready! 🗳️</h3>
-                  <p className="text-primary-100 text-sm font-medium mb-8 max-w-sm mx-auto">We've gathered all your registration, deadline, and polling booth details. You are fully prepared to participate.</p>
-                  <button onClick={handleExport} className="bg-white text-primary-700 text-[11px] font-black px-8 py-4 rounded-2xl shadow-lg hover:scale-105 active:scale-95 transition-all uppercase tracking-widest">
+                  <h3 className="text-2xl font-black mb-1 tracking-tight">Passport Ready! 🗳️</h3>
+                  <p className="text-primary-100 text-xs font-medium mb-6 max-w-sm mx-auto opacity-90">All details gathered. You are fully prepared to participate.</p>
+                  <button onClick={handleExport} className="bg-white text-primary-700 text-[10px] font-black px-6 py-3.5 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all uppercase tracking-widest">
                     DOWNLOAD SUMMARY CARD
                   </button>
                 </div>
@@ -170,36 +171,50 @@ export default function ChatInterface() {
         </div>
 
         {/* Professional Input Dock */}
-        <div className="px-4 md:px-12 pb-8 pt-4 bg-white border-t border-slate-50">
+        <div className="px-4 md:px-8 pb-6 pt-2 bg-white/80 backdrop-blur-md border-t border-slate-50 sticky bottom-0">
           <div className="max-w-3xl mx-auto">
             <ChatInput onSend={handleSend} disabled={isPending} />
-            <p className="text-[9px] text-center text-slate-400 mt-5 font-bold tracking-[0.1em] uppercase opacity-50">
-              Civix Non-Partisan Protocol • Verified Educational Data
-            </p>
+            <div className="flex items-center justify-between mt-4 px-2">
+               <p className="text-[8px] text-slate-400 font-bold tracking-[0.1em] uppercase opacity-40">
+                Civix Non-Partisan Protocol • Educational Data
+              </p>
+              <div className="flex space-x-2">
+                {(['English', 'Hindi', 'Bengali'] as const).map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => setLanguage(lang)}
+                    className={cn(
+                      "text-[8px] font-black uppercase tracking-widest transition-all",
+                      language === lang ? "text-primary-600" : "text-slate-300 hover:text-slate-500"
+                    )}
+                  >
+                    {lang === 'Hindi' ? 'हिन्दी' : lang === 'Bengali' ? 'বাংলা' : 'EN'}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </main>
 
       {/* 3. COMMAND CENTER (Right Rail) */}
-      <aside className="hidden xl:flex w-[24rem] flex-col bg-[#F8FAFC] p-10 overflow-y-auto gap-8 border-l border-slate-100">
-        <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-1 mb-2">Command Center</h4>
+      <aside className="hidden xl:flex w-[21rem] flex-col bg-[#F8FAFC] p-6 overflow-y-auto gap-6 border-l border-slate-100">
+        <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-1">Command Center</h4>
         
         {deadlines.length > 0 ? (
           <DeadlineWidget locationName={location?.state} deadlines={deadlines} nextDeadline={nextDeadline} />
         ) : (
-          <div className="p-10 bg-white rounded-[2.5rem] border border-slate-100 text-center shadow-sm">
-            <LayoutDashboard className="w-10 h-10 text-slate-100 mx-auto mb-5" />
-            <p className="text-[12px] text-slate-400 font-bold leading-relaxed px-2">
-              Enter your location to activate real-time tracking.
+          <div className="p-6 bg-white rounded-[2rem] border border-slate-100 text-center shadow-sm">
+            <LayoutDashboard className="w-8 h-8 text-slate-100 mx-auto mb-4" />
+            <p className="text-[11px] text-slate-400 font-bold leading-relaxed">
+              Activate real-time tracking via location.
             </p>
           </div>
         )}
         
-        <VoterToolkit />
-        <div className="mt-4">
+        <div className="space-y-4">
+          <VoterToolkit />
           <VoterCardGuide />
-        </div>
-        <div className="mt-4">
           <CivicQuiz />
         </div>
       </aside>
@@ -207,9 +222,9 @@ export default function ChatInterface() {
       {/* MOBILE FAB & DRAWER */}
       <button 
         onClick={() => setShowToolkit(true)}
-        className="lg:hidden fixed bottom-32 right-6 w-12 h-12 bg-slate-900 text-white rounded-2xl shadow-2xl flex items-center justify-center z-40 hover:scale-110 active:scale-95 transition-all"
+        className="lg:hidden fixed bottom-24 right-4 w-11 h-11 bg-slate-900 text-white rounded-xl shadow-2xl flex items-center justify-center z-40 hover:scale-110 active:scale-95 transition-all"
       >
-        <LayoutDashboard className="w-5 h-5" />
+        <LayoutDashboard className="w-4 h-4" />
       </button>
 
       <AnimatePresence>
