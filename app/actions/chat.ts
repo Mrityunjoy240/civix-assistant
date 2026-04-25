@@ -5,7 +5,7 @@ import { SYSTEM_PROMPT, US_STATES_ELECTION_DATA, MYTH_BUSTING_KB, ELECTION_PROTE
 import { findStateData, getNextDeadline, formatDateShort, getDeadlinesForState } from '@/lib/deadline-engine';
 
 export async function chatAction(
-  messages: { role: 'user' | 'assistant'; content: string }[],
+  messages: { role: 'user' | 'assistant'; content: string; image?: string; imageType?: string }[],
   location: { country: string; state?: string; county?: string } | null
 ) {
   try {
@@ -18,6 +18,11 @@ export async function chatAction(
     const limitedMessages = messages.slice(-10);
 
     let systemMessage = SYSTEM_PROMPT;
+
+    // Vision-specific instruction if an image is present
+    if (messages[messages.length - 1].image) {
+      systemMessage += "\n\nVISION TASK: The user has uploaded an image (Voter ID, document, or notice). Analyze it carefully. Extract relevant numbers (like EPIC), addresses, or names. Match them to the user's jurisdiction and provide specific next steps based on what you see.";
+    }
 
     if (location?.state) {
       const stateData = findStateData(location.state, US_STATES_ELECTION_DATA);

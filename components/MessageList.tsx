@@ -8,6 +8,8 @@ interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
+  image?: string;
+  imageType?: string;
 }
 
 interface MessageListProps {
@@ -40,12 +42,21 @@ export default function MessageList({ messages, loading }: MessageListProps) {
           initial={{ opacity: 0, x: message.role === 'user' ? 20 : -20 }}
           animate={{ opacity: 1, x: 0 }}
           className={cn(
-            "flex max-w-[85%] rounded-2xl px-5 py-3.5 shadow-sm transition-all",
+            "flex flex-col max-w-[85%] rounded-2xl px-5 py-3.5 shadow-sm transition-all",
             message.role === 'user' 
               ? "ml-auto bg-primary-600 text-white rounded-tr-none shadow-primary-500/10" 
               : "mr-auto bg-white border border-slate-100 rounded-tl-none shadow-slate-200/50 text-slate-800"
           )}
         >
+          {message.image && (
+            <div className="mb-3">
+              <img 
+                src={`data:${message.imageType};base64,${message.image}`} 
+                alt="Uploaded document" 
+                className="rounded-lg max-h-60 w-full object-cover border border-white/20 shadow-sm"
+              />
+            </div>
+          )}
           <div className={cn(
             "prose prose-sm max-w-none leading-relaxed prose-headings:text-inherit prose-p:my-1 prose-ul:my-1 prose-li:my-0.5",
             message.role === 'user' ? "prose-invert" : "prose-slate !text-slate-800"

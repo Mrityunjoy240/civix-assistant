@@ -3,7 +3,7 @@ import { GoogleGenerativeAI, Part } from '@google/generative-ai';
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '');
 
 export async function getGeminiResponse(
-  messages: { role: 'user' | 'assistant'; content: string }[],
+  messages: { role: 'user' | 'assistant'; content: string; image?: string; imageType?: string }[],
   systemPrompt: string
 ) {
   try {
@@ -13,14 +13,36 @@ export async function getGeminiResponse(
     });
 
     const chat = model.startChat({
-      history: messages.slice(0, -1).map(m => ({
-        role: m.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: m.content }],
-      })),
+      history: messages.slice(0, -1).map(m => {
+        const parts: any[] = [{ text: m.content }];
+        if (m.image && m.imageType) {
+          parts.push({
+            inlineData: {
+              data: m.image,
+              mimeType: m.imageType
+            }
+          });
+        }
+        return {
+          role: m.role === 'assistant' ? 'model' : 'user',
+          parts,
+        };
+      }),
     });
 
     const lastMessage = messages[messages.length - 1];
-    const result = await chat.sendMessage(lastMessage.content);
+    const lastParts: any[] = [{ text: lastMessage.content }];
+    
+    if (lastMessage.image && lastMessage.imageType) {
+      lastParts.push({
+        inlineData: {
+          data: lastMessage.image,
+          mimeType: lastMessage.imageType
+        }
+      });
+    }
+
+    const result = await chat.sendMessage(lastParts);
     const response = await result.response;
     return response.text();
   } catch (error) {

@@ -17,6 +17,8 @@ interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
+  image?: string;
+  imageType?: string;
 }
 
 interface Location {
@@ -50,11 +52,13 @@ export default function ChatInterface() {
     URL.revokeObjectURL(url);
   };
 
-  const handleSend = async (content: string) => {
+  const handleSend = async (content: string, imageData?: string, imageType?: string) => {
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content
+      content,
+      image: imageData,
+      imageType: imageType
     };
     
     setMessages(prev => [...prev, userMessage]);
@@ -68,7 +72,12 @@ export default function ChatInterface() {
 
     startTransition(async () => {
       const result = await chatAction(
-        [...messages, userMessage].map(m => ({ role: m.role, content: m.content })),
+        [...messages, userMessage].map(m => ({ 
+          role: m.role, 
+          content: m.content,
+          image: m.image,
+          imageType: m.imageType 
+        })),
         updatedLocation
       );
 
