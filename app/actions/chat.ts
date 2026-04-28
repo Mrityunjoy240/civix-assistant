@@ -26,6 +26,8 @@ export async function chatAction(
       systemMessage += "\n\nVISION TASK: The user has uploaded an image. IMPORTANT: For privacy and security, focus ONLY on civic-relevant data like State, County, or EPIC number. DO NOT repeat or echo sensitive PII like date of birth, father's name, or full signatures in your text response. Extract the jurisdiction and landmark/address. You MUST include a [MAP: address] tag for the detected polling station or locality to help the user visualize where they vote.";
     }
 
+    systemMessage += "\n\nUI WIDGETS: If the user asks how to find their polling booth location or says 'here is my voting booth', EVEN IF you do not know their jurisdiction yet, you MUST immediately ask them for their EPIC Number or Part Number alongside asking for their location. You MUST include the exact string `[SHOW_VOTER_ID_GUIDE]` anywhere in your response to trigger the visual guide on the user's screen.";
+
     if (location?.state) {
       const stateData = findStateData(location.state, US_STATES_ELECTION_DATA);
       if (stateData) {

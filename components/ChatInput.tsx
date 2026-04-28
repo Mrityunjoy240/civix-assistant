@@ -95,7 +95,7 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={disabled}
-          className="p-4 rounded-2xl border border-slate-200 bg-white text-slate-400 hover:text-primary-600 hover:border-primary-200 transition-all shadow-sm"
+          className="p-3 rounded-md bg-white text-zinc-500 ring-1 ring-inset ring-zinc-300 hover:bg-zinc-50 transition-all shadow-sm"
           title="Upload Voter ID or document"
         >
           <ImagePlus className="w-5 h-5" />
@@ -105,8 +105,8 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
           onClick={toggleVoice}
           disabled={disabled}
           className={cn(
-            "p-4 rounded-2xl border border-slate-200 bg-white transition-all shadow-sm",
-            isListening ? "text-red-500 border-red-200 bg-red-50 animate-pulse" : "text-slate-400 hover:text-primary-600 hover:border-primary-200"
+            "p-3 rounded-md bg-white ring-1 ring-inset transition-all shadow-sm",
+            isListening ? "text-red-500 ring-red-300 bg-red-50 animate-pulse" : "text-zinc-500 ring-zinc-300 hover:bg-zinc-50"
           )}
           title="Speak to Civix"
         >
@@ -125,7 +125,7 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type message or upload document..."
           className={cn(
-            "flex-1 bg-white border border-slate-200 rounded-2xl px-5 py-4 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all",
+            "flex-1 bg-white rounded-md px-4 py-3 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-900 sm:text-sm sm:leading-6 transition-all",
             disabled && "opacity-50 cursor-not-allowed"
           )}
           disabled={disabled}
@@ -134,7 +134,7 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
           type="submit"
           disabled={disabled || (!input.trim() && !image)}
           className={cn(
-            "bg-primary-600 text-white p-4 rounded-2xl hover:bg-primary-700 transition-colors shadow-lg shadow-primary-500/20",
+            "bg-zinc-900 text-white p-3 rounded-md hover:bg-zinc-800 transition-colors shadow-sm",
             (disabled || (!input.trim() && !image)) && "opacity-50 cursor-not-allowed"
           )}
         >

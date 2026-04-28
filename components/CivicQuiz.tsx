@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, CheckCircle2, XCircle, Award } from 'lucide-react';
+import { Brain, CheckCircle2, XCircle, Award, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import confetti from 'canvas-confetti';
 
@@ -31,6 +31,7 @@ const QUIZ_QUESTIONS = [
 ];
 
 export default function CivicQuiz() {
+  const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
@@ -68,88 +69,103 @@ export default function CivicQuiz() {
   };
 
   return (
-    <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm overflow-hidden relative group">
-      <div className="absolute top-0 right-0 w-24 h-24 bg-primary-50 rounded-full -mr-12 -mt-12 group-hover:scale-110 transition-transform duration-500" />
-      
-      <div className="relative z-10">
-        <div className="flex items-center space-x-2 mb-6">
-          <Brain className="w-5 h-5 text-primary-600" />
-          <h3 className="font-bold text-slate-800 text-sm">Civic IQ Quiz</h3>
+    <div className="bg-white rounded-lg ring-1 ring-zinc-200 shadow-sm overflow-hidden transition-all">
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between p-4 bg-white hover:bg-zinc-50 transition-colors"
+      >
+        <div className="flex items-center space-x-2">
+          <Brain className="w-5 h-5 text-zinc-700" />
+          <h3 className="font-semibold text-zinc-900 text-sm">Civic IQ Quiz</h3>
         </div>
+        <ChevronDown className={cn("w-4 h-4 text-zinc-400 transition-transform duration-200", isOpen && "rotate-180")} />
+      </button>
 
-        <AnimatePresence mode="wait">
-          {!showResult ? (
-            <motion.div
-              key="question"
-              initial={{ opacity: 0, x: 10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -10 }}
-              className="space-y-4"
-            >
-              <p className="text-xs font-bold text-slate-700 leading-relaxed min-h-[40px]">
-                {QUIZ_QUESTIONS[currentStep].question}
-              </p>
-              
-              <div className="space-y-2">
-                {QUIZ_QUESTIONS[currentStep].options.map((opt, i) => (
-                  <button
-                    key={i}
-                    onClick={() => handleAnswer(i)}
-                    disabled={hasAnswered}
-                    className={cn(
-                      "w-full text-left px-4 py-3 rounded-xl text-[10px] font-bold transition-all border",
-                      selectedOption === i 
-                        ? (i === QUIZ_QUESTIONS[currentStep].correct ? "bg-green-50 border-green-200 text-green-700" : "bg-red-50 border-red-200 text-red-700")
-                        : (hasAnswered && i === QUIZ_QUESTIONS[currentStep].correct ? "bg-green-50 border-green-200 text-green-700" : "bg-slate-50 border-slate-100 text-slate-500 hover:border-primary-200")
-                    )}
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="p-4 border-t border-zinc-100">
+              <AnimatePresence mode="wait">
+                {!showResult ? (
+                  <motion.div
+                    key="question"
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -10 }}
+                    className="space-y-4"
                   >
-                    <div className="flex items-center justify-between">
-                      {opt}
-                      {hasAnswered && i === QUIZ_QUESTIONS[currentStep].correct && <CheckCircle2 className="w-3 h-3" />}
-                      {hasAnswered && selectedOption === i && i !== QUIZ_QUESTIONS[currentStep].correct && <XCircle className="w-3 h-3" />}
-                    </div>
-                  </button>
-                ))}
-              </div>
-
-              {hasAnswered && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-4">
-                  <div className="p-3 bg-primary-50 rounded-xl mb-4">
-                    <p className="text-[9px] text-primary-700 leading-tight">
-                      <strong>Fact:</strong> {QUIZ_QUESTIONS[currentStep].fact}
+                    <p className="text-xs font-semibold text-zinc-800 leading-relaxed min-h-[40px]">
+                      {QUIZ_QUESTIONS[currentStep].question}
                     </p>
-                  </div>
-                  <button 
-                    onClick={nextQuestion}
-                    className="w-full bg-slate-900 text-white text-[10px] font-bold py-2.5 rounded-xl hover:bg-slate-800 transition-colors"
+                    
+                    <div className="space-y-2">
+                      {QUIZ_QUESTIONS[currentStep].options.map((opt, i) => (
+                        <button
+                          key={i}
+                          onClick={() => handleAnswer(i)}
+                          disabled={hasAnswered}
+                          className={cn(
+                            "w-full text-left px-3 py-2.5 rounded-md text-[10px] font-semibold transition-all border",
+                            selectedOption === i 
+                              ? (i === QUIZ_QUESTIONS[currentStep].correct ? "bg-green-50 border-green-200 text-green-700" : "bg-red-50 border-red-200 text-red-700")
+                              : (hasAnswered && i === QUIZ_QUESTIONS[currentStep].correct ? "bg-green-50 border-green-200 text-green-700" : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50")
+                          )}
+                        >
+                          <div className="flex items-center justify-between">
+                            {opt}
+                            {hasAnswered && i === QUIZ_QUESTIONS[currentStep].correct && <CheckCircle2 className="w-4 h-4" />}
+                            {hasAnswered && selectedOption === i && i !== QUIZ_QUESTIONS[currentStep].correct && <XCircle className="w-4 h-4" />}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+
+                    {hasAnswered && (
+                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-4">
+                        <div className="p-3 bg-zinc-50 rounded-md ring-1 ring-inset ring-zinc-200 mb-4">
+                          <p className="text-[10px] text-zinc-600 leading-tight">
+                            <strong className="text-zinc-900">Fact:</strong> {QUIZ_QUESTIONS[currentStep].fact}
+                          </p>
+                        </div>
+                        <button 
+                          onClick={nextQuestion}
+                          className="w-full bg-zinc-900 text-white text-[10px] font-semibold py-2.5 rounded-md hover:bg-zinc-800 transition-colors shadow-sm"
+                        >
+                          {currentStep === QUIZ_QUESTIONS.length - 1 ? 'See Results' : 'Next Question'}
+                        </button>
+                      </motion.div>
+                    )}
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="result"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-center py-4"
                   >
-                    {currentStep === QUIZ_QUESTIONS.length - 1 ? 'SEE RESULTS' : 'NEXT QUESTION'}
-                  </button>
-                </motion.div>
-              )}
-            </motion.div>
-          ) : (
-            <motion.div
-              key="result"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="text-center py-4"
-            >
-              <Award className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
-              <h4 className="text-lg font-black text-slate-800 mb-1">Score: {score}/{QUIZ_QUESTIONS.length}</h4>
-              <p className="text-[10px] text-slate-500 mb-6 font-medium">
-                {score === QUIZ_QUESTIONS.length ? 'Legendary Civic Expert!' : 'Good effort! Keep learning.'}
-              </p>
-              <button 
-                onClick={resetQuiz}
-                className="w-full bg-primary-600 text-white text-[10px] font-bold py-2.5 rounded-xl hover:bg-primary-700 transition-colors shadow-lg shadow-primary-200"
-              >
-                TRY AGAIN
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+                    <Award className="w-12 h-12 text-yellow-500 mx-auto mb-3" />
+                    <h4 className="text-lg font-bold text-zinc-900 mb-1">Score: {score}/{QUIZ_QUESTIONS.length}</h4>
+                    <p className="text-[10px] text-zinc-500 mb-5 font-medium">
+                      {score === QUIZ_QUESTIONS.length ? 'Legendary Civic Expert!' : 'Good effort! Keep learning.'}
+                    </p>
+                    <button 
+                      onClick={resetQuiz}
+                      className="w-full bg-zinc-900 text-white text-[10px] font-semibold py-2.5 rounded-md hover:bg-zinc-800 transition-colors shadow-sm"
+                    >
+                      Try Again
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

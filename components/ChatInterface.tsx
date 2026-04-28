@@ -96,18 +96,18 @@ export default function ChatInterface() {
   const nextDeadline = stateData ? getNextDeadline(stateData) : null;
 
   return (
-    <div className="flex h-screen bg-[#F8FAFC] overflow-hidden font-sans selection:bg-primary-100">
+    <div className="flex h-screen bg-zinc-50 overflow-hidden font-sans selection:bg-zinc-200 relative">
       
       {/* 1. LEFT RAIL (Desktop Nav) */}
-      <aside className="hidden lg:flex w-64 flex-col bg-white border-r border-slate-200">
+      <aside className="hidden lg:flex w-64 flex-col bg-zinc-50 border-r border-zinc-200 z-10">
         <div className="p-6">
           <div className="flex items-center space-x-3 mb-10">
-            <div className="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center text-white shadow-xl shadow-primary-100 ring-4 ring-primary-50">
-              <span className="text-lg font-black italic">C</span>
+            <div className="w-8 h-8 bg-zinc-900 rounded-md flex items-center justify-center text-white shadow-sm ring-1 ring-inset ring-zinc-900/10">
+              <span className="text-base font-bold">C</span>
             </div>
             <div>
-              <h1 className="text-lg font-black tracking-tight text-slate-800 leading-none">Civix</h1>
-              <p className="text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-widest">Global Election Guide</p>
+              <h1 className="text-sm font-semibold tracking-tight text-zinc-900 leading-none">Civix</h1>
+              <p className="text-[10px] font-medium text-zinc-500 mt-1 uppercase tracking-wider">Global Election Guide</p>
             </div>
           </div>
 
@@ -118,10 +118,10 @@ export default function ChatInterface() {
                 {steps.map((step) => (
                   <div key={step.id} className="flex items-center group cursor-default">
                     <div className={cn(
-                      "w-7 h-7 rounded-xl flex items-center justify-center text-[10px] font-bold transition-all duration-500",
+                      "w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-medium transition-all duration-200",
                       step.isCompleted 
-                        ? "bg-green-500 text-white shadow-lg shadow-green-100 scale-110" 
-                        : "bg-slate-50 text-slate-400 border border-slate-100 group-hover:border-primary-200"
+                        ? "bg-zinc-900 text-white shadow-sm" 
+                        : "bg-white text-zinc-500 ring-1 ring-inset ring-zinc-200 group-hover:bg-zinc-50"
                     )}>
                       {step.isCompleted ? '✓' : step.label.charAt(0)}
                     </div>
@@ -138,30 +138,29 @@ export default function ChatInterface() {
           </div>
         </div>
 
-        <div className="mt-auto p-6 border-t border-slate-50">
-          <div className="bg-slate-900 rounded-[1.25rem] p-4 text-white shadow-2xl relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-primary-500/20 rounded-full -mr-10 -mt-10 blur-2xl group-hover:scale-150 transition-transform duration-700" />
-            <p className="text-[10px] font-bold text-primary-300 uppercase tracking-widest mb-1">PROMPTWARS 2026</p>
-            <p className="text-[11px] font-medium leading-relaxed opacity-80 line-clamp-2">Reimagining civic engagement with Gemini.</p>
+        <div className="mt-auto p-6 border-t border-zinc-200">
+          <div className="bg-white rounded-lg p-4 text-zinc-900 ring-1 ring-zinc-200 shadow-sm relative overflow-hidden group">
+            <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest mb-1">PROMPTWARS 2026</p>
+            <p className="text-xs font-medium leading-relaxed opacity-80 line-clamp-2">Reimagining civic engagement with Gemini.</p>
           </div>
         </div>
       </aside>
 
       {/* 2. MAIN CENTER (Chat Engine) */}
-      <main className="flex-1 flex flex-col min-w-0 bg-white lg:m-2 lg:rounded-[2.5rem] lg:border border-slate-200/50 lg:shadow-[0_40px_100px_-30px_rgba(0,0,0,0.08)] overflow-hidden relative">
+      <main className="flex-1 flex flex-col min-w-0 bg-white lg:m-4 lg:rounded-2xl ring-1 ring-zinc-950/5 lg:shadow-sm overflow-hidden relative z-10">
         
         {/* Dynamic Chat Canvas */}
         <JourneyNavigator steps={steps} />
         
-        <div className="flex-1 overflow-y-auto px-4 md:px-8 scroll-smooth custom-scrollbar bg-white/50" ref={scrollRef}>
+        <div className="flex-1 overflow-y-auto px-4 md:px-8 scroll-smooth custom-scrollbar bg-white" ref={scrollRef}>
           <div className="max-w-3xl mx-auto py-8">
             {completedSteps.size === 3 && (
-              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="mb-10 p-6 bg-gradient-to-br from-primary-600 to-primary-900 rounded-[2rem] text-white shadow-2xl relative overflow-hidden">
+              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="mb-10 p-6 bg-zinc-900 rounded-xl text-white shadow-sm ring-1 ring-inset ring-white/10 relative overflow-hidden">
                 <div className="relative z-10 text-center">
-                  <h3 className="text-2xl font-black mb-1 tracking-tight">Passport Ready! 🗳️</h3>
-                  <p className="text-primary-100 text-xs font-medium mb-6 max-w-sm mx-auto opacity-90">All details gathered. You are fully prepared to participate.</p>
-                  <button onClick={handleExport} className="bg-white text-primary-700 text-[10px] font-black px-6 py-3.5 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all uppercase tracking-widest">
-                    DOWNLOAD SUMMARY CARD
+                  <h3 className="text-xl font-semibold mb-1 tracking-tight">Passport Ready! 🗳️</h3>
+                  <p className="text-zinc-400 text-sm font-medium mb-6 max-w-sm mx-auto">All details gathered. You are fully prepared to participate.</p>
+                  <button onClick={handleExport} className="bg-white text-zinc-900 text-xs font-semibold px-4 py-2.5 rounded-md shadow-sm hover:bg-zinc-100 transition-all">
+                    Download Summary Card
                   </button>
                 </div>
               </motion.div>
@@ -171,7 +170,7 @@ export default function ChatInterface() {
         </div>
 
         {/* Professional Input Dock */}
-        <div className="px-4 md:px-8 pb-6 pt-2 bg-white/80 backdrop-blur-md border-t border-slate-50 sticky bottom-0">
+        <div className="px-4 md:px-8 pb-6 pt-2 bg-white border-t border-zinc-100 sticky bottom-0">
           <div className="max-w-3xl mx-auto">
             <ChatInput onSend={handleSend} disabled={isPending} />
             <div className="flex items-center justify-between mt-4 px-2">
@@ -198,13 +197,13 @@ export default function ChatInterface() {
       </main>
 
       {/* 3. COMMAND CENTER (Right Rail) */}
-      <aside className="hidden xl:flex w-[21rem] flex-col bg-[#F8FAFC] p-6 overflow-y-auto gap-6 border-l border-slate-100">
-        <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-1">Command Center</h4>
+      <aside className="hidden xl:flex w-[21rem] flex-col bg-zinc-50 p-6 overflow-y-auto gap-6 border-l border-zinc-200 z-10">
+        <h4 className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest ml-1">Command Center</h4>
         
         {deadlines.length > 0 ? (
           <DeadlineWidget locationName={location?.state} deadlines={deadlines} nextDeadline={nextDeadline} />
         ) : (
-          <div className="p-6 bg-white rounded-[2rem] border border-slate-100 text-center shadow-sm">
+          <div className="p-6 bg-white rounded-lg ring-1 ring-zinc-200 text-center shadow-sm">
             <LayoutDashboard className="w-8 h-8 text-slate-100 mx-auto mb-4" />
             <p className="text-[11px] text-slate-400 font-bold leading-relaxed">
               Activate real-time tracking via location.
