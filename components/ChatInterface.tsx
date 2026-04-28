@@ -183,8 +183,10 @@ export default function ChatInterface() {
                     key={lang}
                     onClick={() => setLanguage(lang)}
                     className={cn(
-                      "text-[8px] font-black uppercase tracking-widest transition-all",
-                      language === lang ? "text-primary-600" : "text-slate-300 hover:text-slate-500"
+                      "text-[10px] font-bold px-2 py-1 rounded transition-all",
+                      language === lang 
+                        ? "bg-zinc-900 text-white shadow-sm" 
+                        : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900"
                     )}
                   >
                     {lang === 'Hindi' ? 'हिन्दी' : lang === 'Bengali' ? 'বাংলা' : 'EN'}

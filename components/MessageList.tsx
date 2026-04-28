@@ -109,8 +109,8 @@ export default function MessageList({ messages, loading }: MessageListProps) {
             )}
 
             {message.role === 'assistant' && showVoterGuide && (
-              <div className="mt-4 w-full sm:w-80">
-                <VoterCardGuide />
+              <div className="mt-4 w-full max-w-xl">
+                <VoterCardGuide inlineMode={true} />
               </div>
             )}
           </motion.div>

@@ -16,9 +16,9 @@ export default function MapWidget({ address }: MapWidgetProps) {
 
   if (!apiKey) {
     return (
-      <div className="p-4 bg-orange-50 border border-orange-100 rounded-xl text-orange-700 text-xs flex items-start space-x-2">
+      <div className="p-4 bg-amber-50 rounded-lg ring-1 ring-amber-200/50 text-amber-800 text-xs flex items-start space-x-2 mt-4 shadow-sm">
         <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-        <p>Google Maps API key missing. Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment variables to enable the map view.</p>
+        <p>Google Maps API key missing. Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment variables.</p>
       </div>
     );
   }
@@ -27,20 +27,20 @@ export default function MapWidget({ address }: MapWidgetProps) {
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="mt-4 rounded-xl overflow-hidden border border-slate-200 shadow-md bg-white"
+      className="mt-4 rounded-lg overflow-hidden bg-white ring-1 ring-zinc-200 shadow-sm"
     >
-      <div className="bg-slate-50 px-4 py-2 border-b border-slate-200 flex items-center justify-between">
-        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center">
-          <MapPin className="w-3 h-3 mr-1 text-primary-600" />
+      <div className="bg-zinc-50 px-4 py-2 border-b border-zinc-200 flex items-center justify-between">
+        <span className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest flex items-center">
+          <MapPin className="w-3 h-3 mr-1 text-zinc-400" />
           Detected Polling Location
         </span>
         <a 
           href={`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[10px] font-bold text-primary-600 hover:underline"
+          className="text-[10px] font-semibold text-zinc-700 hover:text-zinc-900 transition-colors"
         >
-          OPEN IN GOOGLE MAPS
+          Open in Maps
         </a>
       </div>
       <div className="aspect-video w-full">
@@ -55,7 +55,7 @@ export default function MapWidget({ address }: MapWidgetProps) {
         ></iframe>
       </div>
       <div className="p-3 bg-white">
-        <p className="text-xs text-slate-600 font-medium">{address}</p>
+        <p className="text-xs text-zinc-800 font-medium">{address}</p>
       </div>
     </motion.div>
   );
