@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
@@ -19,7 +20,7 @@ interface MessageListProps {
   loading?: boolean;
 }
 
-export default function MessageList({ messages, loading }: MessageListProps) {
+const MessageList = React.memo(({ messages, loading }: MessageListProps) => {
   return (
     <div className="flex flex-col space-y-4 p-4">
       {messages.length === 0 && (
@@ -48,7 +49,6 @@ export default function MessageList({ messages, loading }: MessageListProps) {
                   const input = document.querySelector('input[type="text"]') as HTMLInputElement;
                   if (input) {
                     input.value = suggestion;
-                    // Trigger change event for React state if needed, or rely on form submit
                     input.dispatchEvent(new Event('input', { bubbles: true }));
                   }
                 }}
@@ -61,12 +61,8 @@ export default function MessageList({ messages, loading }: MessageListProps) {
       )}
 
       {messages.map((message) => {
-        // Check for map tag: [MAP: some address]
         const mapMatch = message.content.match(/\[MAP:\s*(.*?)\]/);
-        
-        // Check for Voter ID Guide tag
         const showVoterGuide = message.content.includes('[SHOW_VOTER_ID_GUIDE]');
-
         const displayContent = message.content
           .replace(/\[MAP:\s*.*?\]/g, '')
           .replace(/\[SHOW_VOTER_ID_GUIDE\]/g, '')
@@ -136,4 +132,6 @@ export default function MessageList({ messages, loading }: MessageListProps) {
       )}
     </div>
   );
-}
+});
+
+export default MessageList;

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import { GoogleAnalytics } from '@next/third-parties/google';
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({ subsets: ["latin"] });
@@ -25,6 +26,8 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
+import { Providers } from './providers';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -32,7 +35,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" style={{ colorScheme: 'light' }}>
-      <body className={`${plusJakarta.className} bg-[#f0f4f8] text-slate-900`}>{children}</body>
+      <body className={`${plusJakarta.className} bg-[#f0f4f8] text-slate-900`}>
+        <Providers>{children}</Providers>
+        <GoogleAnalytics gaId="G-XYZ1234567" />
+      </body>
     </html>
   );
 }
