@@ -1,8 +1,8 @@
-# 🗳️ Civix: AI-Powered Election Process Assistant
+# 🗳️ Civix: Verified Civic Readiness Engine
 
-**Civix** is a high-performance, non-partisan election assistant designed to help voters navigate the complexities of registration, deadlines, and voting procedures. Built for the **Google PromptWars 2026** hackathon.
+**Civix** is a high-performance, non-partisan **Verified Civic Readiness Engine powered by Gemini + deterministic election logic**. It helps voters navigate registration, deadlines, and voting procedures with verifiable outputs.
 
-![Next.js 15](https://img.shields.io/badge/Next.js-15+-black?style=for-the-badge&logo=next.js)
+![Next.js 16](https://img.shields.io/badge/Next.js-16+-black?style=for-the-badge&logo=next.js)
 ![Gemini 2.5](https://img.shields.io/badge/Google-Gemini_2.5_Flash-blue?style=for-the-badge&logo=googlegemini)
 ![Tailwind v4](https://img.shields.io/badge/Tailwind-v4-38B2AC?style=for-the-badge&logo=tailwind-css)
 
@@ -12,11 +12,11 @@
 - **Deterministic Deadline Engine:** Unlike standard LLMs that might hallucinate dates, Civix uses a custom logic engine to calculate real-time election deadlines for the user's specific state.
 - **Intent-Aware Progress Tracking:** A smart UI that tracks the user's journey through registration, preparation, and voting based on conversational context.
 - **Export Chat Utility:** Allows users to export their civic research as a professional text summary to take with them to the polls.
-- **Modern Architecture:** Built using Next.js 15 Server Actions and React 19 concurrent features for maximum efficiency and security.
+- **Modern Architecture:** Built using Next.js 16 Server Actions and React 19 concurrent features for maximum efficiency and security.
 
 ## 🛠️ Tech Stack
 
-- **Framework:** [Next.js 15 (App Router)](https://nextjs.org/)
+- **Framework:** [Next.js 16 (App Router)](https://nextjs.org/)
 - **AI Model:** [Google Gemini 2.5 Flash](https://aistudio.google.com/)
 - **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
 - **Animations:** [Framer Motion](https://www.framer.com/motion/)
