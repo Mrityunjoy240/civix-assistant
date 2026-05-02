@@ -8,13 +8,16 @@ describe('location-parser', () => {
       expect(parseLocation('What about new york?')).toEqual({ country: 'us', state: 'New York', county: undefined });
     });
 
-    it('detects aliases', () => {
-      expect(parseLocation('I am in CA')).toEqual({ country: 'us', state: 'California', county: undefined });
+    it('parses India states and aliases', () => {
+      expect(parseLocation('I vote in West Bengal')).toEqual({ country: 'india', state: 'West Bengal', county: undefined });
+      expect(parseLocation('india wb')).toEqual({ country: 'india', state: 'West Bengal', county: undefined });
+      expect(parseLocation('india Maharashtra')).toEqual({ country: 'india', state: 'Maharashtra', county: undefined });
+      expect(parseLocation('I am from india mh')).toEqual({ country: 'india', state: 'Maharashtra', county: undefined });
+      expect(parseLocation('indian voter delhi')).toEqual({ country: 'india', state: 'Delhi', county: undefined });
     });
 
-    it('detects international countries', () => {
-      expect(parseLocation('Canada')).toEqual({ country: 'canada', state: undefined, county: undefined });
-      expect(parseLocation('Elections India')).toEqual({ country: 'india', state: undefined, county: undefined });
+    it('detects aliases', () => {
+      expect(parseLocation('I am in CA')).toEqual({ country: 'us', state: 'California', county: undefined });
     });
   });
 

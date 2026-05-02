@@ -28,7 +28,19 @@ export async function chatAction(
 
     systemMessage += "\n\nUI WIDGETS: If the user asks how to find their polling booth location AND they are voting in India (or their location is currently unknown), you MUST ask them for their EPIC Number or Part Number alongside asking for their location. You MUST include the exact string `[SHOW_VOTER_ID_GUIDE]` anywhere in your response to trigger the visual guide. DO NOT ask for EPIC/Part numbers or use this tag if the user is explicitly voting in the US, Canada, or any other non-India jurisdiction.";
 
-    if (location?.state) {
+    
+    systemMessage += `
+
+RESPONSE FORMAT: Always structure responses with these headings in order:
+[Situation Summary]
+[Verified Answer]
+[Source / Why this is reliable]
+[Next Step]`;
+    systemMessage += `
+For election deadlines, prioritize deterministic deadline data provided in this prompt and never invent dates.`;
+    systemMessage += `
+If deterministic data is unavailable, you must say exactly: "I don’t have verified local deadline data for this jurisdiction yet. Please check the official source."`;
+if (location?.state) {
       const stateData = findStateData(location.state, US_STATES_ELECTION_DATA);
       if (stateData) {
         const nextDeadline = getNextDeadline(stateData);
