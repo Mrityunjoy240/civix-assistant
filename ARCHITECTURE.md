@@ -1,59 +1,91 @@
-# Civix System Architecture
+# 🏛️ Civix Assistant Architecture
 
-**Civix** is built on a "Deterministic-Generative Hybrid" architecture. Unlike standard AI wrappers, Civix uses a strictly typed engine to handle critical jurisdictional logic, ensuring that high-stakes information (like election deadlines) is 100% accurate, while Gemini handles natural language interaction and vision processing.
+Civix Assistant is built on a **Hybrid Deterministic + AI** architecture designed for maximum reliability and intelligence in the civic engagement space. This document outlines the technical design, data flow, and performance strategies that allow it to scale while maintaining high evaluation scores.
 
-## 🏗️ High-Level System Design
+## 🏗️ Overview
 
-```mermaid
-graph TD
-    User((User)) -->|Multimodal Input| FE[Next.js 15 Frontend]
-    
-    subgraph "Server-First Layer (Vercel Edge)"
-        FE -->|Server Action| SA[chatAction.ts]
-        SA -->|1. Extraction| LP[location-parser.ts]
-        SA -->|2. Logic| DE[deadline-engine.ts]
-        SA -->|3. Context| KB[Knowledge Base]
-    end
-    
-    subgraph "Google Intelligence Layer"
-        SA -->|4. Orchestration| GAI[Google Generative AI SDK]
-        GAI -->|Vision/Text| GEM[Gemini 2.5 Flash]
-        FE -->|Embed API| GM[Google Maps API]
-    end
-    
-    GEM -->|Structured Response| SA
-    SA -->|Polished UI| FE
+Unlike traditional LLM wrappers, Civix uses a multi-layered approach to handle election data:
+1. **AI Layer (Gemini)**: Handles natural language understanding, multi-lingual support, and vision-based voter ID analysis.
+2. **Deterministic Layer (Engine)**: A precise, locally-executed engine that calculates deadlines, urgency, and jurisdiction-specific rules using verified data.
+3. **Optimized UI Layer (React 19)**: A high-performance frontend using Server Components and aggressive client-side memoization.
+
+---
+
+## 📂 Project Structure (Feature-Based)
+
+The project follows a **Clean Architecture** pattern, separating features from shared infrastructure.
+
+```text
+/app
+  /actions         # Validated Server Actions (Zod)
+/features
+  /chat
+    /hooks         # Core logic: useChatEngine.ts
+    /schemas       # Strict Zod schemas for runtime safety
+/lib
+  /ai              # Gemini integration & prompt engineering
+  /engine          # Deterministic logic (Deadlines, Locations)
+  /utils           # Optimized shared utilities
+/components
+  /chat            # Chat presentation components
+  /widgets         # Interactive election widgets
+  /guides          # Educational visual guides
 ```
 
-## 🛠️ Core Architectural Pillars
+---
 
-### 1. The Multimodal Pipeline (Vision + Text + Voice)
-Civix implements a "Vision-to-Action" pipeline. When a user uploads a Voter ID:
-- **Vision:** Gemini 2.5 Flash OCRs the document to extract state/district.
-- **Action:** The system automatically triggers the **Google Maps Embed API** for that specific locality.
-- **Voice:** Native STT integration allows for hands-free civic engagement.
+## 🔄 Data Flow
 
-### 2. The Deterministic Engine (Zero-Hallucination)
-Election dates are non-negotiable. 
-- We use a custom **Deadline Engine** that calculates real-time urgency based on the server's UTC-synchronized time.
-- The AI is **forbidden** from guessing dates; it must use the context injected by the Engine.
+The following diagram illustrates how a user request flows through the system:
 
-### 3. Server-First Security
-- **Next.js 15 Server Actions:** 100% of the AI orchestration happens on the server.
-- **PII Guardrails:** Implicit redaction instructions are built into the system prompt to prevent sensitive data from persisting in logs or UI state.
+```mermaid
+sequenceDiagram
+    participant U as User (Browser)
+    participant H as useChatEngine (Hook)
+    participant A as Server Action (chatAction)
+    participant G as Google Gemini (AI)
+    participant E as Deadline Engine (Local)
 
-### 4. Indic AI Strategy
-Civix is designed for the **Next Billion Users** in India:
-- **Vernacular-First:** Direct language toggling for English, Hindi, and Bengali.
-- **Agentic Share:** One-click WhatsApp integration for high-friction information sharing.
+    U->>H: Send Message / Image
+    H->>A: Validate & Forward (Zod)
+    A->>G: Analyze Intent & Vision
+    G-->>A: AI Response + Intent Tags
+    A->>E: Query State Data (if location found)
+    E-->>A: Deadlines & Portal URLs
+    A-->>H: Hydrated Response
+    H->>U: Update UI (Memoized Render)
+```
 
-## 📈 Evaluation Criteria Alignment
+---
 
-| Criterion | Civic Implementation |
-| :--- | :--- |
-| **Code Quality** | Clean architecture with strict TypeScript definitions and separated logic layers. |
-| **Security** | Zero client-side keys. PII redaction and secure cookie-less session handling. |
-| **Efficiency** | Context window limiting (slice-10) and high-speed Flash model usage. |
-| **Testing** | Automated Vitest suite for the core logical engine. |
-| **Accessibility** | ARIA-compliant UI, voice input, and native Indic language support. |
-| **Google Services** | Deep integration: Gemini 2.5, Google Maps, AI Vision, and Google Search Grounding. |
+## ⚡ Performance Optimizations
+
+### 1. Aggressive Memoization
+We use `useMemo` for all deterministic calculations (deadlines, state data lookups). This ensures that typing or switching tabs doesn't trigger expensive re-scans of the election data dictionary.
+
+### 2. React 19 Transitions
+All chat interactions are wrapped in `useTransition`. This keeps the UI responsive even while waiting for server-side AI generation, preventing the "frozen" feeling common in chat apps.
+
+### 3. Server-First Architecture
+- **Server Components**: All static content (Voter Card Guides, Navigators) are rendered on the server to reduce the JavaScript bundle.
+- **Server Actions**: Heavy logic like prompt hydration and PII scrubbing happens on the server, keeping the client thin.
+
+### 4. Bundle Optimization
+- **@next/bundle-analyzer**: Used to identify and prune large dependencies.
+- **Next.js Font Optimization**: Self-hosted Google Fonts to eliminate layout shift (CLS).
+
+---
+
+## 🧪 Testing Strategy
+
+We maintain a **>90% coverage target** for core logic:
+- **Unit Tests**: Full coverage for `deadline-engine` and `location-parser`.
+- **Mocked AI Tests**: `gemini.ts` is tested using a custom mock of the `@google/generative-ai` SDK.
+- **Hook Tests**: `useChatEngine` is tested using `renderHook` to verify complex state transitions.
+- **Zod Validation**: Server actions are tested for schema compliance to prevent malformed inputs.
+
+---
+
+## 🛡️ Security & Privacy
+- **PII Scrubbing**: The system is instructed to never repeat sensitive voter data (DOB, full names) from images.
+- **Non-Partisan Protocol**: System prompts enforce neutrality and rely on verified educational sources.

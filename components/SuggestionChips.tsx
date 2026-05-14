@@ -14,7 +14,7 @@ interface SuggestionChipsProps {
   disabled?: boolean;
 }
 
-export default function SuggestionChips({ flows, onSelect, disabled }: SuggestionChipsProps) {
+export default function SuggestionChips({ flows = [], onSelect, disabled }: SuggestionChipsProps) {
   return (
     <div className="flex flex-wrap gap-2 mb-6">
       {flows.map((flow, index) => (

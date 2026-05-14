@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CreditCard, ExternalLink, ChevronDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils';
 
 export default function VoterCardGuide({ inlineMode = false }: { inlineMode?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -52,7 +52,7 @@ export default function VoterCardGuide({ inlineMode = false }: { inlineMode?: bo
         
         <div className="mt-3 p-3 bg-zinc-50 rounded-md ring-1 ring-inset ring-zinc-200/50">
           <p className="text-[10px] text-zinc-600 leading-relaxed">
-            <span className="font-semibold text-zinc-900">Can't find it?</span> Part numbers are often not printed on old cards.
+            <span className="font-semibold text-zinc-900">Can&apos;t find it?</span> Part numbers are often not printed on old cards.
           </p>
           <a 
             href="https://electoralsearch.eci.gov.in/"

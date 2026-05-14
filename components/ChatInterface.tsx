@@ -1,99 +1,36 @@
 'use client';
 
-import { useState, useRef, useEffect, useTransition } from 'react';
-import { chatAction } from '@/app/actions/chat';
-import { US_STATES_ELECTION_DATA } from '@/lib/constants';
-import { findStateData, getNextDeadline, getDeadlinesForState } from '@/lib/deadline-engine';
-import { parseLocation } from '@/lib/location-parser';
+import { useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { LayoutDashboard, X } from 'lucide-react';
+import { cn } from '@/lib/utils/utils';
+import { useChatEngine } from '@/features/chat/hooks/useChatEngine';
+
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
 import DeadlineWidget from './DeadlineWidget';
-import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
-import { Download, LayoutDashboard, MessageSquare, Settings, Menu, X } from 'lucide-react';
 import VoterToolkit from './VoterToolkit';
-import confetti from 'canvas-confetti';
 import CivicQuiz from './CivicQuiz';
 import JourneyNavigator from './JourneyNavigator';
 import VoterCardGuide from './VoterCardGuide';
 
-interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  image?: string;
-  imageType?: string;
-}
-
-interface Location {
-  country: string;
-  state?: string;
-  county?: string;
-}
-
 export default function ChatInterface() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [location, setLocation] = useState<Location | null>(null);
-  const [language, setLanguage] = useState<'English' | 'Hindi' | 'Bengali'>('English');
-  const [isPending, startTransition] = useTransition();
-  const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
+  const {
+    messages,
+    location,
+    language,
+    isPending,
+    completedSteps,
+    steps,
+    deadlines,
+    nextDeadline,
+    setLanguage,
+    handleExport,
+    handleSend
+  } = useChatEngine();
+
   const [showMobileToolkit, setShowToolkit] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  const steps = [
-    { id: 'register', label: 'Register', isCompleted: location !== null },
-    { id: 'prepare', label: 'Prepare', isCompleted: location !== null && messages.some(m => 
-        m.role === 'user' && (m.content.toLowerCase().includes('deadline') || m.content.toLowerCase().includes('ballot'))
-      ) 
-    },
-    { id: 'vote', label: 'Vote', isCompleted: location !== null && messages.some(m => 
-        m.role === 'user' && (m.content.toLowerCase().includes('vote') || m.content.toLowerCase().includes('voted'))
-      ) 
-    }
-  ];
-
-  useEffect(() => {
-    const newlyCompleted = steps.filter(s => s.isCompleted && !completedSteps.has(s.id));
-    if (newlyCompleted.length > 0) {
-      const nextSet = new Set(completedSteps);
-      newlyCompleted.forEach(s => nextSet.add(s.id));
-      setCompletedSteps(nextSet);
-      if (nextSet.size === 3) {
-        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#3b82f6', '#10b981', '#ef4444'] });
-      }
-    }
-  }, [messages, location]);
-
-  const handleExport = () => {
-    if (messages.length === 0) return;
-    const text = messages.map(m => `[${m.role.toUpperCase()}]\n${m.content}\n`).join('\n---\n\n');
-    const blob = new Blob([text], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `civix-plan-${new Date().toISOString().split('T')[0]}.txt`;
-    a.click();
-  };
-
-  const handleSend = async (content: string, imageData?: string, imageType?: string) => {
-    const userMessage: Message = { id: Date.now().toString(), role: 'user', content, image: imageData, imageType: imageType };
-    setMessages(prev => [...prev, userMessage]);
-    const detectedLocation = parseLocation(content);
-    if (detectedLocation?.state) setLocation(detectedLocation);
-
-    startTransition(async () => {
-      const result = await chatAction([...messages, userMessage].map(m => ({ 
-        role: m.role, content: m.content, image: m.image, imageType: m.imageType 
-      })), detectedLocation || location, language);
-      if (result.response) {
-        setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), role: 'assistant', content: result.response! }]);
-      }
-    });
-  };
-
-  const stateData = location?.state ? findStateData(location.state, US_STATES_ELECTION_DATA) : null;
-  const deadlines = stateData ? getDeadlinesForState(stateData) : [];
-  const nextDeadline = stateData ? getNextDeadline(stateData) : null;
 
   return (
     <div className="flex h-screen bg-zinc-50 overflow-hidden font-sans selection:bg-zinc-200 relative">

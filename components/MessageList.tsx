@@ -2,18 +2,13 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils';
 import ReactMarkdown from 'react-markdown';
+import Image from 'next/image';
 import MapWidget from './MapWidget';
 import VoterCardGuide from './VoterCardGuide';
 
-interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  image?: string;
-  imageType?: string;
-}
+import { Message } from '@/features/chat/schemas';
 
 interface MessageListProps {
   messages: Message[];
@@ -84,9 +79,12 @@ const MessageList = React.memo(({ messages, loading }: MessageListProps) => {
           >
             {message.image && (
               <div className="mb-3">
-                <img 
+                <Image 
                   src={`data:${message.imageType};base64,${message.image}`} 
                   alt="Uploaded document" 
+                  width={500}
+                  height={300}
+                  unoptimized
                   className="rounded-lg max-h-60 w-full object-cover border border-white/20 shadow-sm"
                 />
               </div>
@@ -133,5 +131,7 @@ const MessageList = React.memo(({ messages, loading }: MessageListProps) => {
     </div>
   );
 });
+
+MessageList.displayName = 'MessageList';
 
 export default MessageList;

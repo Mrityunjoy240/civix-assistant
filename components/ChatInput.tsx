@@ -1,15 +1,16 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, memo } from 'react';
 import { Send, ImagePlus, X, Mic, MicOff } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import Image from 'next/image';
+import { cn } from '@/lib/utils/utils';
 
 interface ChatInputProps {
   onSend: (message: string, image?: string, imageType?: string) => void;
   disabled?: boolean;
 }
 
-export default function ChatInput({ onSend, disabled }: ChatInputProps) {
+const ChatInput = memo(function ChatInput({ onSend, disabled }: ChatInputProps) {
   const [input, setInput] = useState('');
   const [image, setImage] = useState<{ data: string; type: string } | null>(null);
   const [isListening, setIsListening] = useState(false);
@@ -72,19 +73,22 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
   return (
     <div className="space-y-4">
       {image && (
-        <div className="relative inline-block ml-4">
-          <img 
-            src={`data:${image.type};base64,${image.data}`} 
-            alt="Preview" 
-            className="h-20 w-20 object-cover rounded-xl border-2 border-primary-500 shadow-md"
-          />
-          <button
-            onClick={() => setImage(null)}
-            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-lg hover:bg-red-600 transition-colors"
-          >
-            <X className="w-3 h-3" />
-          </button>
-        </div>
+              <div className="relative group ml-4">
+                <Image 
+                  src={image.data} 
+                  alt="Preview" 
+                  width={64}
+                  height={64}
+                  unoptimized
+                  className="h-16 w-16 object-cover rounded-lg border border-zinc-200" 
+                />
+                <button 
+                  onClick={() => setImage(null)}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
       )}
       
       <form 
@@ -149,4 +153,8 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
       )}
     </div>
   );
-}
+});
+
+ChatInput.displayName = 'ChatInput';
+
+export default ChatInput;

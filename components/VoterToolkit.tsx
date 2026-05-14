@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldAlert, CheckSquare, NotebookPen, Info, ChevronDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils';
 
 export default function VoterToolkit() {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +39,7 @@ export default function VoterToolkit() {
       >
         <div className="flex items-center space-x-2">
           <CheckSquare className="w-5 h-5 text-zinc-700" />
-          <h3 className="font-semibold text-zinc-900 text-sm">Voter's Toolkit</h3>
+          <h3 className="font-semibold text-zinc-900 text-sm">Voter&apos;s Toolkit</h3>
         </div>
         <ChevronDown className={cn("w-4 h-4 text-zinc-400 transition-transform duration-200", isOpen && "rotate-180")} />
       </button>

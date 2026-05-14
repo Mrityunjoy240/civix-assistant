@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Clock, AlertCircle, Share2, Info } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils';
 
 interface Deadline {
   type: string;
@@ -17,7 +17,7 @@ interface DeadlineWidgetProps {
   nextDeadline?: Deadline | null;
 }
 
-export default function DeadlineWidget({ locationName, deadlines, nextDeadline }: DeadlineWidgetProps) {
+const DeadlineWidget = memo(function DeadlineWidget({ locationName, deadlines, nextDeadline }: DeadlineWidgetProps) {
   const [queueStatus, setQueueStatus] = useState<'low' | 'medium' | 'high' | null>(null);
   
   if (deadlines.length === 0) return null;
@@ -129,4 +129,6 @@ export default function DeadlineWidget({ locationName, deadlines, nextDeadline }
       </div>
     </motion.div>
   );
-}
+});
+
+export default DeadlineWidget;

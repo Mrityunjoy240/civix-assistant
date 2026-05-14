@@ -1,28 +1,36 @@
 'use server';
 
-import { getGeminiResponse } from '@/lib/gemini';
-import { SYSTEM_PROMPT, US_STATES_ELECTION_DATA, MYTH_BUSTING_KB, ELECTION_PROTECTION_HOTLINE } from '@/lib/constants';
-import { findStateData, getNextDeadline, formatDateShort, getDeadlinesForState } from '@/lib/deadline-engine';
+import { getGeminiResponse } from '@/lib/ai/gemini';
+import { SYSTEM_PROMPT, US_STATES_ELECTION_DATA, MYTH_BUSTING_KB, ELECTION_PROTECTION_HOTLINE } from '@/lib/ai/constants';
+import { findStateData, getNextDeadline, formatDateShort, getDeadlinesForState } from '@/lib/engine/deadline-engine';
+import { ChatRequestSchema, Message, Location } from '@/features/chat/schemas';
 
 export async function chatAction(
-  messages: { role: 'user' | 'assistant'; content: string; image?: string; imageType?: string }[],
-  location: { country: string; state?: string; county?: string } | null,
+  messages: Message[],
+  location: Location | null,
   language: string = 'English'
 ) {
   try {
     // Basic validation
-    if (!messages || messages.length === 0) {
+    const parsed = ChatRequestSchema.safeParse({ messages, location, language });
+    if (!parsed.success) {
+      return { error: 'Invalid input format' };
+    }
+
+    const validMessages = parsed.data.messages;
+
+    if (!validMessages || validMessages.length === 0) {
       return { error: 'No messages provided' };
     }
 
     // Limit context window for efficiency and security (keep only last 10 messages)
-    const limitedMessages = messages.slice(-10);
+    const limitedMessages = validMessages.slice(-10);
 
     let systemMessage = SYSTEM_PROMPT;
     systemMessage += `\n\nLANGUAGE: You MUST respond in ${language}. If the user provides an image or text in another language, translate your analysis into ${language}.`;
 
     // Vision-specific instruction if an image is present
-    if (messages[messages.length - 1].image) {
+    if (limitedMessages[limitedMessages.length - 1].image) {
       systemMessage += "\n\nVISION TASK: The user has uploaded an image. IMPORTANT: For privacy and security, focus ONLY on civic-relevant data like State, County, or EPIC number. DO NOT repeat or echo sensitive PII like date of birth, father's name, or full signatures in your text response. Extract the jurisdiction and landmark/address. You MUST include a [MAP: address] tag for the detected polling station or locality to help the user visualize where they vote.";
     }
 

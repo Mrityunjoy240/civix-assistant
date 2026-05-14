@@ -1,9 +1,10 @@
-import { GoogleGenerativeAI, Part } from '@google/generative-ai';
+import { GoogleGenerativeAI, Part, Tool } from '@google/generative-ai';
+import { Message } from '@/features/chat/schemas';
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '');
 
 export async function getGeminiResponse(
-  messages: { role: 'user' | 'assistant'; content: string; image?: string; imageType?: string }[],
+  messages: Message[],
   systemPrompt: string
 ) {
   try {
@@ -13,13 +14,13 @@ export async function getGeminiResponse(
       tools: [
         {
           googleSearch: {},
-        } as any,
+        } as unknown as Tool, // Still an issue with googleSearch type in older versions, but safer than any
       ],
     });
 
     const chat = model.startChat({
       history: messages.slice(0, -1).map(m => {
-        const parts: any[] = [{ text: m.content }];
+        const parts: Part[] = [{ text: m.content }];
         if (m.image && m.imageType) {
           parts.push({
             inlineData: {
@@ -36,7 +37,7 @@ export async function getGeminiResponse(
     });
 
     const lastMessage = messages[messages.length - 1];
-    const lastParts: any[] = [{ text: lastMessage.content }];
+    const lastParts: Part[] = [{ text: lastMessage.content }];
     
     if (lastMessage.image && lastMessage.imageType) {
       lastParts.push({
